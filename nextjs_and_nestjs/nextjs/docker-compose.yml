@@ -6,11 +6,11 @@ services:
       context: .
       dockerfile: docker/node/Dockerfile
     tty: true
-    working_dir: /workspace
+    working_dir: /workspace/nextjs_and_nestjs/nextjs
     volumes:
-      - ../.:/workspace
-      - node-target:/workspace/node-target
+      - ../../.:/workspace
+      - node_modules:/workspace/node_modules
     ports:
       - 127.0.0.1:80:80
 volumes:
-  node-target:
+  node_modules:
