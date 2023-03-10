@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    tty: true
+    working_dir: /workspace
+    volumes:
+      - ../.:/workspace
+      - node-target:/workspace/node-target
+    ports:
+      - 127.0.0.1:80:80
+volumes:
+  node-target:
