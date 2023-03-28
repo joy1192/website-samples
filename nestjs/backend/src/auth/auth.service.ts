@@ -1,4 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { sign } from "jsonwebtoken";
+import { ConfigService } from '@nestjs/config';
+import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
-export class AuthService {}
+export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+    constructor(private readonly configService: ConfigService) { }
+
+    async createToken(username: string, password: string): Promise<{ refreshToken: string; accessToken: string }> {
+        const privateKey = this.configService.get<string>("PRIVATE_KEY");
+        const refreshTokenExpiredInMs = this.configService.get<number>("REFRESH_TOKEN_EXPIRES_IN_MS");
+        const accessTokenExpiredInMs = this.configService.get<number>("ACCESS_TOKEN_EXPIRES_IN_MS");
+
+        // ユーザー認証
+        if (await this.authenticate(username, password) === false) {
+            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        }
+
+        // JWTを生成
+        try {
+            const refreshTokenContent = { id: uuidv4(), username };
+            const refreshToken = sign(refreshTokenContent, privateKey, {
+                algorithm: 'RS256',
+                expiresIn: refreshTokenExpiredInMs,
+            });
+            this.logger.log(`create refreshToken: ${refreshToken}`);
+
+            const accessTokenContent = { id: uuidv4(), username };
+            const accessToken = sign(accessTokenContent, privateKey, {
+                algorithm: 'RS256',
+                expiresIn: accessTokenExpiredInMs,
+            });
+            this.logger.log(`create accessToken: ${accessToken}`);
+            return {
+                refreshToken,
+                accessToken
+            };
+        } catch (e) {
+            this.logger.error(e);
+            throw new HttpException('Internal Server Error', 500);
+        }
+    }
+
+    async authenticate(username: string, password: string): Promise<boolean> {
+        // TODO: ユーザー認証処理を実装
+        return true;
+    }
+}

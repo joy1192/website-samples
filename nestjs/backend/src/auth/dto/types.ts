@@ -19,4 +19,9 @@ export class RefreshTokenResponseDto {
     @IsNotEmpty()
     @ApiProperty()
     refreshToken: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty()
+    accessToken: string;
 }
