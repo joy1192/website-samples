@@ -25,3 +25,17 @@ export class RefreshTokenResponseDto {
     @ApiProperty()
     accessToken: string;
 }
+
+export class AccessTokenRequestDto {
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty()
+    refreshToken: string;
+}
+
+export class AccessTokenResponseDto {
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty()
+    accessToken: string;
+}
