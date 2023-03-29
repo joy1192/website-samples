@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { sign, verify } from "jsonwebtoken";
 import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from "uuid";
 import { AccessToken, RefreshToken } from "../common/types";
 import { isRefreshToken } from "../common/typeguards";
+import { uuid } from "../common/uuid";
 
 @Injectable()
 export class AuthService {
@@ -23,14 +23,14 @@ export class AuthService {
 
         // JWTを生成
         try {
-            const refreshTokenPayload: RefreshToken = { id: uuidv4(), username };
+            const refreshTokenPayload: RefreshToken = { id: uuid(), username };
             const refreshToken = sign(refreshTokenPayload, privateKey, {
                 algorithm: 'RS256',
                 expiresIn: refreshTokenExpiredInMs,
             });
             this.logger.log(`create refreshToken: ${refreshToken}`);
 
-            const accessTokenPayload: AccessToken = { id: uuidv4(), username, refreshTokenId: refreshTokenPayload.id };
+            const accessTokenPayload: AccessToken = { id: uuid(), username, refreshTokenId: refreshTokenPayload.id };
             const accessToken = sign(accessTokenPayload, privateKey, {
                 algorithm: 'RS256',
                 expiresIn: accessTokenExpiredInMs,
@@ -69,7 +69,7 @@ export class AuthService {
         try {
             const { id, username } = refreshTokenPayload;
 
-            const accessTokenPayload: AccessToken = { id: uuidv4(), username, refreshTokenId: id };
+            const accessTokenPayload: AccessToken = { id: uuid(), username, refreshTokenId: id };
             const accessToken = sign(accessTokenPayload, privateKey, {
                 algorithm: 'RS256',
                 expiresIn: accessTokenExpiredInMs,
