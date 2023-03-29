@@ -3,7 +3,7 @@ import { sign, verify } from "jsonwebtoken";
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from "uuid";
 import { AccessToken, RefreshToken } from "../common/types";
-import { isAccessToken, isRefreshToken } from "../common/typeguards";
+import { isRefreshToken } from "../common/typeguards";
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,6 @@ export class AuthService {
             const refreshToken = sign(refreshTokenPayload, privateKey, {
                 algorithm: 'RS256',
                 expiresIn: refreshTokenExpiredInMs,
-
             });
             this.logger.log(`create refreshToken: ${refreshToken}`);
 

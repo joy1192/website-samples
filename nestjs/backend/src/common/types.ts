@@ -14,12 +14,22 @@ export class ErrorResponseDto {
     code: string;
 }
 
-export class RefreshToken implements JwtPayload {
+export class TokenBase implements JwtPayload {
+    iss?: string | undefined;
+    sub?: string | undefined;
+    aud?: string | string[] | undefined;
+    exp?: number | undefined;
+    nbf?: number | undefined;
+    iat?: number | undefined;
+    jti?: string | undefined;
+}
+
+export class RefreshToken extends TokenBase {
     id: string;
     username: string;
 }
 
-export class AccessToken implements JwtPayload {
+export class AccessToken extends TokenBase {
     id: string;
     username: string;
     refreshTokenId: string; // 発行元に使用されたRefreshTokenのid
