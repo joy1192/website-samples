@@ -1,6 +1,6 @@
 import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { ErrorResponseDto } from 'src/common/types';
+import { ErrorResponseDto } from '../common/types';
 import { AuthService } from './auth.service';
 import { AccessTokenRequestDto, AccessTokenResponseDto, RefreshTokenRequestDto, RefreshTokenResponseDto } from './dto/types';
 

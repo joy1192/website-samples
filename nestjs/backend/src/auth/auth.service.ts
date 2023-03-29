@@ -27,6 +27,7 @@ export class AuthService {
             const refreshToken = sign(refreshTokenPayload, privateKey, {
                 algorithm: 'RS256',
                 expiresIn: refreshTokenExpiredInMs,
+
             });
             this.logger.log(`create refreshToken: ${refreshToken}`);
 
@@ -54,8 +55,11 @@ export class AuthService {
         let refreshTokenPayload: RefreshToken;
         try {
             const payload = verify(token, privateKey, { algorithms: ['RS256'] });
-            if (isRefreshToken(payload)) {
+            // payloadの型がRefreshTokenであるかをチェック
+            if (typeof payload !== 'string' && isRefreshToken(payload)) {
                 refreshTokenPayload = payload;
+            } else {
+                throw new Error('Invalid Token');
             }
         } catch (e) {
             this.logger.error(e);

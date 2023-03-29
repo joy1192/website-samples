@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
+import { JwtPayload } from "jsonwebtoken"
 
 export class ErrorResponseDto {
     @IsString()
@@ -13,12 +14,12 @@ export class ErrorResponseDto {
     code: string;
 }
 
-export class RefreshToken {
+export class RefreshToken implements JwtPayload {
     id: string;
     username: string;
 }
 
-export class AccessToken {
+export class AccessToken implements JwtPayload {
     id: string;
     username: string;
     refreshTokenId: string; // 発行元に使用されたRefreshTokenのid
