@@ -4,17 +4,18 @@ import { ConfigService } from '@nestjs/config';
 import { AccessToken, RefreshToken } from "../common/types";
 import { isRefreshToken } from "../common/typeguards";
 import { uuid } from "../common/uuid";
+import { EnvironmentVariables } from '../common/configuration';
 
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name);
-    constructor(private readonly configService: ConfigService) { }
+    constructor(private readonly configService: ConfigService<EnvironmentVariables, true>) { }
 
     // ユーザー認証を行い、RefreshTokenとAccessTokenを生成する
     async createToken(username: string, password: string): Promise<{ refreshToken: string; accessToken: string }> {
-        const privateKey = this.configService.get<string>("PRIVATE_KEY");
-        const refreshTokenExpiredInMs = this.configService.get<number>("REFRESH_TOKEN_EXPIRES_IN_MS");
-        const accessTokenExpiredInMs = this.configService.get<number>("ACCESS_TOKEN_EXPIRES_IN_MS");
+        const privateKey = this.configService.get('PRIVATE_KEY');
+        const refreshTokenExpiredInMs = this.configService.get("REFRESH_TOKEN_EXPIRES_IN_MS");
+        const accessTokenExpiredInMs = this.configService.get("ACCESS_TOKEN_EXPIRES_IN_MS");
 
         // ユーザー認証
         if (await this.authenticate(username, password) === false) {
@@ -48,8 +49,8 @@ export class AuthService {
 
     // RefreshTokenを元にAccessTokenを生成
     async createTokenByRefreshToken(token: string): Promise<{ accessToken: string }> {
-        const privateKey = this.configService.get<string>("PRIVATE_KEY");
-        const accessTokenExpiredInMs = this.configService.get<number>("ACCESS_TOKEN_EXPIRES_IN_MS");
+        const privateKey = this.configService.get("PRIVATE_KEY");
+        const accessTokenExpiredInMs = this.configService.get("ACCESS_TOKEN_EXPIRES_IN_MS");
 
         let refreshTokenPayload: RefreshToken;
         try {

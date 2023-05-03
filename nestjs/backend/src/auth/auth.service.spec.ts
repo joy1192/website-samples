@@ -13,7 +13,8 @@ describe('AuthService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({
-        envFilePath: [".env.local", ".env"]
+        envFilePath: ['.env.local', '.env.development', '.env.staging', '.env.production'], // 環境変数を読み込むファイルを指定
+        isGlobal: true
       })],
       providers: [AuthService],
     }).compile();

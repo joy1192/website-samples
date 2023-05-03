@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [ConfigModule.forRoot({
-    envFilePath: ['.env.local', '.env'], // 環境変数を読み込むファイルを指定
+    envFilePath: ['.env.local', '.env.development', '.env.staging', '.env.production'], // 環境変数を読み込むファイルを指定
     isGlobal: true, // 全てのモジュールで利用可能にする
   }), AuthModule],
   controllers: [],
